@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Award,
   CheckCircle2,
@@ -11,6 +11,7 @@ import {
   Printer,
   Edit3,
   X,
+  UserCheck,
   Target,
   Cpu,
   Sparkles,
@@ -21,8 +22,10 @@ import {
   AlertCircle,
   FileCheck,
   ShieldCheck,
-  RotateCw
+  RotateCw,
+  Mail
 } from 'lucide-react';
+import { FeedbackEmailModal } from './components/FeedbackEmailModal';
 
 // ==========================================
 // 1. 타입 정의 (Types)
@@ -1467,6 +1470,9 @@ export default function App() {
   // 성적서 팝업 모달 상태
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState<boolean>(false);
 
+  // 피드백 이메일 발송 팝업 모달 상태
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState<boolean>(false);
+
   // 복사 알림 상태
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
 
@@ -1550,12 +1556,12 @@ export default function App() {
             <div className="flex items-center gap-2 mb-1">
               <span className="px-3 py-0.5 text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30 flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                GDX Verification System
+                AXAGE Verification System
               </span>
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
               <Award className="w-8 h-8 text-amber-400" />
-              AI Agent 기반 GDX 문제해결 역량 평가
+              AI Agent 기반 AXAGE 문제해결 역량 평가
             </h1>
           </div>
 
@@ -2117,7 +2123,7 @@ export default function App() {
               <div className="flex items-center gap-2">
                 <FileCheck className="w-5 h-5 text-amber-400" />
                 <h3 className="font-bold text-base text-white">
-                  GDX 문제해결 역량 검증 성적서 발급
+                  AXAGE 문제해결 역량 검증 성적서 발급
                 </h3>
               </div>
               <button
@@ -2137,10 +2143,10 @@ export default function App() {
                   KOLON INDUSTRIES AX INNOVATION CENTER
                 </div>
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-                  AI Agent 기반 GDX 문제해결 역량 검증 성적서
+                  AI Agent 기반 AXAGE 문제해결 역량 검증 성적서
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
-                  발급 번호: KOLON-GDX-2026-0809-{selectedCandidate.moduleNumber}
+                  발급 번호: KOLON-AXAGE-2026-0809-{selectedCandidate.moduleNumber}
                 </p>
               </div>
 
@@ -2245,7 +2251,7 @@ export default function App() {
               {/* Official Issuer Signature Box */}
               <div className="text-center pt-6 border-t border-slate-300">
                 <p className="text-xs font-medium text-slate-600 mb-3">
-                  위 사람은 코오롱인더스트리 GDX 과정의 성과 검증 기준에 따라 위와 같이 평가결과를 입증함.
+                  위 사람은 코오롱인더스트리 AXAGE 과정의 성과 검증 기준에 따라 위와 같이 평가결과를 입증함.
                 </p>
                 <div className="text-lg font-black tracking-tight text-slate-900 flex items-center justify-center gap-3">
                   <span>코오롱인더스트리 AX Innovation 센터장</span>
@@ -2257,24 +2263,31 @@ export default function App() {
 
             </div>
 
-            {/* Modal Footer with Print Button */}
-            <div className="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between shrink-0">
+            {/* Modal Footer with Print Button & Feedback Dispatch Button */}
+            <div className="p-4 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
               <span className="text-xs text-slate-400">
-                인쇄 버튼을 누르면 성적서를 출력하거나 PDF로 저장할 수 있습니다.
+                성적서를 출력하거나 응시자에게 피드백 메일을 발송할 수 있습니다.
               </span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsCertificateModalOpen(false)}
-                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl cursor-pointer"
+                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl cursor-pointer transition-colors"
                 >
                   닫기
                 </button>
                 <button
                   onClick={() => window.print()}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold rounded-xl shadow-md cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md cursor-pointer flex items-center gap-1.5 transition-colors"
                 >
                   <Printer className="w-4 h-4 text-amber-300" />
                   <span>성적서 인쇄 / PDF 저장</span>
+                </button>
+                <button
+                  onClick={() => setIsFeedbackModalOpen(true)}
+                  className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black rounded-xl shadow-lg cursor-pointer flex items-center gap-1.5 border border-emerald-400/30 transition-all"
+                >
+                  <Mail className="w-4 h-4 text-emerald-100" />
+                  <span>피드백 발송하기</span>
                 </button>
               </div>
             </div>
@@ -2282,6 +2295,15 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* ==========================================
+          FEEDBACK EMAIL POPUP MODAL (피드백 발송 팝업)
+         ========================================== */}
+      <FeedbackEmailModal
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+        candidate={selectedCandidate}
+      />
 
     </div>
   );
