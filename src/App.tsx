@@ -24,7 +24,7 @@ import {
   RotateCw,
   Mail
 } from 'lucide-react';
-import { FeedbackEmailModal } from './components/FeedbackEmailModal';
+// import { FeedbackEmailModal } from './components/FeedbackEmailModal';
 
 // ==========================================
 // 1. 타입 정의 (Types)
@@ -2298,12 +2298,13 @@ export default function App() {
       {/* ==========================================
           FEEDBACK EMAIL POPUP MODAL (피드백 발송 팝업)
          ========================================== */}
+      {/*
       <FeedbackEmailModal
         isOpen={isFeedbackModalOpen}
         onClose={() => setIsFeedbackModalOpen(false)}
         candidate={selectedCandidate}
       />
-
+      */}
     </div>
   );
 }
